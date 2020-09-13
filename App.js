@@ -198,10 +198,13 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Button } from 'react-native-paper';
 import { Appbar } from 'react-native-paper';
+import firebase from './src/services/firebaseConnection';
 
 import Busca from './src/pages/Busca';
 import Produto from './src/pages/Produto';
 import Lista from './src/pages/Lista';
+import Conta from './src/pages/Conta';
+import SignIn from './src/pages/SignIn';
 
 const Tab = createBottomTabNavigator();
 
@@ -214,6 +217,12 @@ const icons={
   },
   Produto: {
     name: 'add'
+  },
+  Conta: {
+    name: 'supervisor-account'
+  },
+  SignIn: {
+    name: 'supervisor-account'
   }
 };
 function HomeScreen() {
@@ -267,6 +276,8 @@ export default function App(){
           <Tab.Screen name="Busca" component={Busca} />
           <Tab.Screen name="Lista" component={Lista} />
           <Tab.Screen name="Produto" component={Produto} />
+          <Tab.Screen name="Conta" component={Conta} />
+          <Tab.Screen name="SignIn" component={SignIn} />
         </Tab.Navigator>
       </NavigationContainer>      
     </PaperProvider>
