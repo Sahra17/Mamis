@@ -4,55 +4,48 @@ import { Platform, View, StyleSheet, Text, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Button, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+
 import { AuthContext } from '../../contexts/auth';
 
-export default function SignIn() {
-  const navigation = useNavigation();
+export default function SignUp(){
+    const navigation = useNavigation();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { signIn } = useContext(AuthContext);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-  function handleLogin(){
-    signIn(email, password);
-  }
+    const { signUp } = useContext(AuthContext);
+
+    function handleSignUp(){
+        signUp(email, password, name);
+    }
 
   return(
     <View 
     behavior={Platform.OS === 'ios' ? 'padding' : ''}
     enabled
     style={styles.view} >
-      <Image
-        style={styles.stretch}
-
-        source={require('./LogoMamis.png')}
-      />
-
-      <TextInput style={styles.text}
-        placeholder="Email"
-        autoCorrect={false} //impede a autocorreção do teclado
-        autoCapitalize="none" //não começa com a primeira maiuscula
-        value={email}
-        onChangeText={text => setEmail(text)} //text
-      />
-      <TextInput style={styles.text}
-        placeholder="Senha"
-        autoCorrect={false} //impede a autocorreção do teclado
-        autoCapitalize="none"
-        value={password}
-        onChangeText={text => setPassword(text)}
-      />
-      <Button style={styles.button} mode="contained" onPress={handleLogin}>
-        Entrar
+        <TextInput style={styles.text}
+          label="name"
+          value={name}
+          onChangeText={ (text) => setName(text)}
+        />
+        <TextInput style={styles.text}
+          label="email"
+          value={email}
+          onChangeText={ (text) => setEmail(text)}
+        />
+        <TextInput style={styles.text}
+          label="senha"
+          value={password}
+          onChangeText={ (text) => setPassword(text)}
+        />
+      <Button style={styles.button} mode="contained" onPress={handleSignUp}>
+        Cadastrar
       </Button>
-
-      <Text onPress={ () => navigation.navigate('SignUp')}>
-        Criar uma conta!
-      </Text>
     </View>
   );
 }
-
 
 const Stack = createStackNavigator();  
 const theme = {

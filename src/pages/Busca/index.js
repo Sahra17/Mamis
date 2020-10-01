@@ -1,15 +1,30 @@
-import React from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Searchbar } from 'react-native-paper';
 
-export default function Busca(){
+import { AuthContext } from '../../contexts/auth';
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Button } from 'react-native-paper';
+
+const Tab = createBottomTabNavigator();
+
+
+export default function busca(){
+  const [prod, setProd] = useState('');
+
+  const { user, signOut } = useContext(AuthContext);
   const navigation = useNavigation();
   //barra de pesquisa
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const onChangeSearch = query => setSearchQuery(query);
-
+  async function buscar(){
+    var ref = firebase.database().ref("usuarios");
+    ref.orderByChild("cargo").equalTo(prod).on("child_added", function(snapshot) {
+      console.log(snapshot.key);
+    });
+};
     return(
       <View>      
 
@@ -22,9 +37,23 @@ export default function Busca(){
               marginTop:10,
               alignContent: "center",
               }}
-            onChangeText={onChangeSearch}
-            value={searchQuery}
+              onChangeText={(texto) => setProd(texto) }
+
+            value={prod}
           />
+          <Text>
+            {user.name}
+          </Text>
+          <Button mode="contained"
+            title="buscar"
+            onPress={buscar}
+          />
+          <Button mode="contained"
+            title="Sair da conta"
+            onPress={() => signOut()} 
+          />
+        
+
       </View>
     );
 }
