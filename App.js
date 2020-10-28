@@ -190,144 +190,56 @@ export default function App(){
 */
 
 import * as React from 'react';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { FlatList, View, StyleSheet, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Button } from 'react-native-paper';
-import { Appbar } from 'react-native-paper';
-import firebase from './src/services/firebaseConnection';
-
-import Busca from './src/pages/Busca';
-import Produto from './src/pages/Produto';
-import Lista from './src/pages/Lista';
-import Conta from './src/pages/Conta';
-import SignIn from './src/pages/SignIn';
-
-const Tab = createBottomTabNavigator();
-
-const icons={
-  Busca: {
-    name: 'search'
-  },
-  Lista: {
-    name: 'playlist-add'
-  },
-  Produto: {
-    name: 'add'
-  },
-  Conta: {
-    name: 'supervisor-account'
-  },
-  SignIn: {
-    name: 'supervisor-account'
-  }
-};
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-    </View>
-  );
-}
+import AuthProvider from './src/contexts/auth';
+import Routes from './src/routes/index';
 
 const Stack = createStackNavigator();     
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#f16a77',
-    accent: 'yellow',
-    background: '#f16a77',
-  },
-};
 
 export default function App(){
 
   return (
-    <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Appbar.Header>
-          <Appbar.Content title="Mamis" color="white"/>
-        </Appbar.Header>
-
-      <Tab.Navigator
-        screenOptions={ ({route}) => ({
-          tabBarIcon: ({ color, size}) => {
-            const {name} = icons[route.name];
-            return <Icon name={name} color={color} size={size} />
-          },
-            headerStyle: {
-              backgroundColor: '#f4511e',
-            },
-            headerTintColor: '#fff',
-        })}
-        tabBarOptions={{
-          
-          style:{
-            backgroundColor: '#f16a77',
-          },
-          activeTintColor: '#FFF',
-          inactiveTintColor: "grey"
-        }}
-        >
-          <Tab.Screen name="Busca" component={Busca} />
-          <Tab.Screen name="Lista" component={Lista} />
-          <Tab.Screen name="Produto" component={Produto} />
-          <Tab.Screen name="Conta" component={Conta} />
-          <Tab.Screen name="SignIn" component={SignIn} />
-        </Tab.Navigator>
+        <AuthProvider>
+          <Routes/>
+        </AuthProvider>      
       </NavigationContainer>      
-    </PaperProvider>
 
   );
 }
 /*
- <Tab.Navigator
-      screenOptions={ ({route}) => ({
-        tabBarIcon: ({ color, size}) => {
-          const {name} = icons[route.name];
-          return <Icon name={name} color={color} size={size} />
-        },
-          headerStyle: {
-            backgroundColor: '#f4511e',
-          },
-          headerTintColor: '#fff',
-      })}
-      tabBarOptions={{
-        style:{
-          backgroundColor: '#f16a77'
-        },
-        activeTintColor: '#FFF',
-        inactiveTintColor: "grey"
-      }}
-      >
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Sobre" component={Sobre} />
-        <Tab.Screen name="Contato" component={Contato} />
-      </Tab.Navigator>
-      */
+Esse está certo
 
+<Appbar.Header>
+          <Appbar.Content title="Mamis" color="white"/>
+        </Appbar.Header>
 
-/*
-      <Button style={styles.container}
-          title="Pesquisa por produto"
-          onPress={() => navigation.navigate('Details')}
-        />
-
-      <View style={styles.container}>
-        <Button
-          title="Pesquisa por produto"
-          onPress={() => navigation.navigate('Details')}
-        />
-      </View>
-
-      <View style={styles.container}>
-        <Button
-          title="Pesquisa por produto"
-          onPress={() => navigation.navigate('Details')}
-        />
-      </View>
+<Tab.Navigator
+screenOptions={ ({route}) => ({
+  tabBarIcon: ({ color, size}) => {
+    const {name} = icons[route.name];
+    return <Icon name={name} color={color} size={size} />
+  },
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    headerTintColor: '#fff',
+})}
+tabBarOptions={{
+  
+  style:{
+    backgroundColor: '#f16a77',
+  },
+  activeTintColor: '#FFF',
+  inactiveTintColor: "grey"
+}}
+>
+  <Tab.Screen name="Busca" component={Busca} />
+  <Tab.Screen name="Lista" component={Lista} />
+  <Tab.Screen name="Produto" component={Produto} />
+  <Tab.Screen name="Conta" component={Conta} />
+  <Tab.Screen name="SignIn" component={SignIn} />
+</Tab.Navigator>
 */

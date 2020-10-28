@@ -1,141 +1,99 @@
-import * as React from 'react';
+import React, { useState, useContext } from 'react';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { FlatList, View, StyleSheet, Text, Image } from 'react-native';
+import { Platform, View, StyleSheet, Text, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Button, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from '../../contexts/auth';
 
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text>home Screen</Text>
-  
-    <Button mode="contained" onPress={() => navigation.navigate('Busca')}>
-    Go to Home
-    </Button>
-  
-  </View>
-  );
-}
+export default function SignIn() {
+  const navigation = useNavigation();
 
-function Login({ navigation }) {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { signIn } = useContext(AuthContext);
+
+  function handleLogin(){
+    signIn(email, password);
+  }
 
   return(
-    <View style={styles.inputs}>
-<Image
+    <View 
+    behavior={Platform.OS === 'ios' ? 'padding' : ''}
+    enabled
+    style={styles.view} >
+      <Image
         style={styles.stretch}
 
         source={require('./LogoMamis.png')}
       />
 
       <TextInput style={styles.text}
-        label="Email"
+        placeholder="Email"
+        autoCorrect={false} //impede a autocorreção do teclado
+        autoCapitalize="none" //não começa com a primeira maiuscula
         value={email}
-        onChangeText={email => setEmail(email)}
+        onChangeText={text => setEmail(text)} //text
       />
       <TextInput style={styles.text}
-        label="Senha"
+        placeholder="Senha"
+        autoCorrect={false} //impede a autocorreção do teclado
+        autoCapitalize="none"
         value={password}
-        onChangeText={password => setPassword(password)}
+        secureTextEntry={true}
+        onChangeText={text => setPassword(text)}
       />
-      <Button style={styles.button} mode="contained" onPress={() => navigation.navigate('Busca')}>
+      <Button style={styles.button} mode="contained" onPress={handleLogin}>
         Entrar
       </Button>
+
+      <Text style={styles.criarConta} onPress={ () => navigation.navigate('SignUp')}>
+        Criar uma conta!
+      </Text>
     </View>
   );
 }
-function DetailsScreen({ navigation }) {
-  
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Button
-        mode="contained"
-        onPress={() => navigation.push('Details')}
-      >
-        Go to Details... again
-      </Button>
-      <Button mode="contained" onPress={() => navigation.navigate('HomeScreen')}>
-      Go to Home
-      </Button>
-      <Button mode="contained" onPress={() => navigation.goBack()}>
-      Go back
-      </Button>
-      <Button
-                mode="contained"
-        onPress={() => navigation.popToTop()}
-      >
-        Go back to first screen in stack
-        </Button>
-       
-    </View>
-    
- 
-  
-  );
-}
-
-
 
 
 const Stack = createStackNavigator();  
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#f16a77',
-    accent: 'yellow',
-    background: '#f16a77',
-  },
-};
 
-
-
-export default function SignIn(){
-  const navigation = useNavigation();
- 
-  return (
-    <PaperProvider theme={theme}>
-
-    <Stack.Navigator initialRouteName="Login"  screenOptions={{
-      headerShown: false
-    }}>
-      <Stack.Screen name="Details" component={DetailsScreen} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      </Stack.Navigator>
-    </PaperProvider>
-
-  );
-}
 
 const styles = StyleSheet.create({
-	inputs: {
-        marginTop: 10, 
-        marginBottom: 10,
-        marginLeft: 10,
-        marginRight: 10,
+	view: {
+    backgroundColor: '#f16a77',
+    width:'100%',
+    height:'100%'
   },
   button:{
     backgroundColor:"#545454",
-    color:"#841584"
+    color:'white',
+    marginTop: 10, 
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  criarConta:{
+    alignSelf: "center",
+    marginTop: 10,
+    color:'white'
   },
 	text: {
-        marginBottom: 5,
-        backgroundColor:"white",
+    marginTop: 10, 
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    backgroundColor:"white",
+    color:'red'
 
-    },
-    title:{
-        alignSelf: "center",
-        marginTop: 10
-    },
-    stretch: {
-      width: 300,
-      height: 300,
-      resizeMode: 'stretch',
-      alignSelf: 'center',
-
-    },
+  },
+  title:{
+      alignSelf: "center",
+      marginTop: 10
+  },
+  stretch: {
+    width: 300,
+    height: 300,
+    resizeMode: 'stretch',
+    alignSelf: 'center',
+  },
 })
