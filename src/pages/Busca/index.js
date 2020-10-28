@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList, ActivityIndicator, Image, Modal, TouchableOpacity, TouchableWithoutFeedback, Dimensions } from 'react-native';
+=======
+import React, { useContext, useState } from 'react';
+import { View, Text } from 'react-native';
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
 import { useNavigation } from '@react-navigation/native';
 import { Searchbar, Button } from 'react-native-paper';
 
+<<<<<<< HEAD
 import Listagem from '../../Listagem.js';
 import firebase from '../../services/firebaseConnection';
 
@@ -10,11 +16,18 @@ import { AuthContext } from '../../contexts/auth';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //import { Button } from 'react-native-paper';
+=======
+import { AuthContext } from '../../contexts/auth';
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Button } from 'react-native-paper';
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
 
 const Tab = createBottomTabNavigator();
 
 
 export default function busca(){
+<<<<<<< HEAD
   const [produtos, setProdutos] = useState('');
   const [historico, setHistorico] = useState([]);
 
@@ -80,7 +93,21 @@ export default function busca(){
     })
 
   };
+=======
+  const [prod, setProd] = useState('');
 
+  const { user, signOut } = useContext(AuthContext);
+  const navigation = useNavigation();
+  //barra de pesquisa
+  const [searchQuery, setSearchQuery] = useState('');
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
+
+  async function buscar(){
+    var ref = firebase.database().ref("usuarios");
+    ref.orderByChild("cargo").equalTo(prod).on("child_added", function(snapshot) {
+      console.log(snapshot.key);
+    });
+};
     return(
       <View>      
 
@@ -93,6 +120,7 @@ export default function busca(){
               marginTop:10,
               alignContent: "center",
               }}
+<<<<<<< HEAD
               onChangeText={(texto) => setProdutos(texto) }
 
             value={produtos}
@@ -110,6 +138,25 @@ export default function busca(){
    
   
   
+=======
+              onChangeText={(texto) => setProd(texto) }
+
+            value={prod}
+          />
+          <Text>
+            {user.name}
+          </Text>
+          <Button mode="contained"
+            title="buscar"
+            onPress={buscar}
+          />
+          <Button mode="contained"
+            title="Sair da conta"
+            onPress={() => signOut()} 
+          />
+        
+
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
       </View>
     );
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect, Component } from 'react';
 import { View, Text, StyleSheet, Platform, Image, TouchableOpacity, ScrollView, Picker} from 'react-native';
 import firebase from '../../services/firebaseConnection';
@@ -6,10 +7,18 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import { Button, TextInput, Title, Subheading } from 'react-native-paper';
 import { pickImageFromCamera, pickImageFromLibrary } from '../../Camera.js';
+=======
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, Button} from 'react-native';
+import firebase from '../../services/firebaseConnection';
+import { createStackNavigator } from '@react-navigation/stack';
+
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
 
 
 export default function Produto(){
   const [nome, setNome] = useState('');
+<<<<<<< HEAD
   const [descricao, setDescricao] = useState('');
   const [categoriaSel, setCategoriaSel] = useState(''); //select
   const [supermercadoSel, setSupermercadoSel] = useState(''); //select
@@ -173,10 +182,90 @@ export default function Produto(){
         Cadastrar
       </Button>
     </ScrollView>
+=======
+  const [cargo, setCargo] = useState('');
+
+  useEffect(()=> {
+
+    async function dados(){
+
+      //Criar um (nó)
+      //await firebase.database().ref('tipo').set('Vendedor');
+
+      //Remove um nó
+      //await firebase.database().ref('tipo').remove();
+
+      // await firebase.database().ref('usuarios').child(3).set({
+      //   nome: 'Jose',
+      //   cargo: 'Programador Junior'
+      // });
+
+      // await firebase.database().ref('usuarios').child(3)
+      // .update({
+      //   nome: 'Jose augusto'
+      // })
+
+    }
+
+    dados();
+
+
+  }, []);
+
+
+
+  async function cadastrar(){
+    if(nome !== '' & cargo !== ''){
+      let usuarios = await firebase.database().ref('usuarios');
+      let chave = usuarios.push().key;
+
+      usuarios.child(chave).set({
+        nome: nome,
+        cargo: cargo
+      });
+
+      alert('Cadastrado com sucesso!');
+      setCargo('');
+      setNome('');
+    }
+  }
+  const Stack = createStackNavigator();
+
+
+  return(
+    
+    <View style={styles.container}>
+       < Formik
+     initialValues = { { nome : '' } }  
+     onSubmit = { valores => console . log ( valores ) } 
+   ></Formik>
+      <Text style={styles.texto}>Nome</Text>
+      <TextInput
+      style={styles.input}
+      underlineColorAndroid="transparent"
+      onChangeText={(texto) => setNome(texto) }
+      value={nome}
+      />
+
+      <Text style={styles.texto}>Cargo</Text>
+      <TextInput
+      style={styles.input}
+      underlineColorAndroid="transparent"
+      onChangeText={(texto) => setCargo(texto) }
+      value={cargo}
+      />
+
+      <Button
+      title="Novo funcionario"
+      onPress={cadastrar}
+      />
+    </View>
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
   );
 }
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
 	view: {
     backgroundColor: 'white',
     width:'100%',
@@ -226,3 +315,21 @@ const styles = StyleSheet.create({
      onSubmit = { valores => console . log ( valores ) } 
    ></Formik>
    */
+=======
+  container:{
+    flex:1,
+    margin: 10,
+  },
+  texto: {
+    fontSize: 20,
+  },
+  input:{
+    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#121212',
+    height: 45,
+    fontSize: 17
+  }
+});
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047

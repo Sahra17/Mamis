@@ -1,12 +1,19 @@
 import React, {useState, createContext, useEffect } from 'react';
 import firebase from '../services/firebaseConnection';
+<<<<<<< HEAD
 import AsyncStorage from '@react-native-community/async-storage';
+=======
+import { AsyncStorage } from '@react-native-community/async-storage';
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
 
 export const AuthContext = createContext({});
 
 function AuthProvider({children}){
     const [user, setUser] = useState(null);
+<<<<<<< HEAD
     const [idUpdate, setIdUpdate] = useState(null);
+=======
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
     const [loading, setLoading] = useState(false);
 
     useEffect(()=>{
@@ -29,6 +36,7 @@ function AuthProvider({children}){
 
     //Logar o usuário
     async function signIn(email, password){
+<<<<<<< HEAD
        // await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION).then(() => {
            await firebase.auth().signInWithEmailAndPassword(email, password)
             .then(async (value)=>{
@@ -69,6 +77,30 @@ function AuthProvider({children}){
     }
     //Cadastrar usuário
     async function signUp(email, password, name, telefone, endereco){
+=======
+        await firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(async (value)=>{
+            let uid = value.user.uid;
+            await firebase.database().ref('users').child(uid).once('value')
+            .then((snapshot)=>{
+                let data={
+                    uid: uid,
+                    name: snapshot.val().name,
+                    email: value.user.email,
+                };
+
+                setUser(data);
+                storageUser(data);
+
+            })
+        })
+        .catch((error)=>{
+            alert(error.code);
+        });
+    }
+    //Cadastrar usuário
+    async function signUp(email, password, name){
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
         await firebase.auth().createUserWithEmailAndPassword(email,password)
         .then(async (value)=>{
             let uid = value.user.uid;
@@ -76,8 +108,11 @@ function AuthProvider({children}){
                 name: name,
                 email: email,
                 password: password,
+<<<<<<< HEAD
                 telefone: telefone,
                 endereco: endereco,
+=======
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
             })
             .then(()=>{
                 let data = {
@@ -85,8 +120,11 @@ function AuthProvider({children}){
                     name: name,
                     email: value.user.email,
                     password: value.user.password,
+<<<<<<< HEAD
                     telefone: value.user.telefone,
                     endereco: value.user.endereco,
+=======
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
                 };
                 setUser(data);
                 storageUser(data);
@@ -97,6 +135,7 @@ function AuthProvider({children}){
         });
     }
 
+<<<<<<< HEAD
     async function update(email, password, name, telefone, endereco){
 
 
@@ -123,6 +162,8 @@ function AuthProvider({children}){
           
         
     }
+=======
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
     //salva o usuário logado no async, dessa forma ele será deslogado do app somente de fazer o logOut
     async function storageUser(data){
         await AsyncStorage.setItem('Auth_user', JSON.stringify(data));
@@ -137,7 +178,11 @@ function AuthProvider({children}){
     }
 
     return(
+<<<<<<< HEAD
         <AuthContext.Provider value={{ signed: !!user, user, signUp, signIn, signOut, loading, update }}>
+=======
+        <AuthContext.Provider value={{ signed: !!user, user, signUp, signIn, signOut, loading }}>
+>>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
             {children}
         </AuthContext.Provider>
     );
