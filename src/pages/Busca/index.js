@@ -1,71 +1,19 @@
-<<<<<<< HEAD
-import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, ActivityIndicator, Image, Modal, TouchableOpacity, TouchableWithoutFeedback, Dimensions } from 'react-native';
-=======
-import React, { useContext, useState } from 'react';
-import { View, Text } from 'react-native';
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, FlatList } from 'react-native';
 import { Searchbar, Button } from 'react-native-paper';
-
-<<<<<<< HEAD
 import Listagem from '../../Listagem.js';
 import firebase from '../../services/firebaseConnection';
 
-import { AuthContext } from '../../contexts/auth';
-
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-//import { Button } from 'react-native-paper';
-=======
-import { AuthContext } from '../../contexts/auth';
-
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button } from 'react-native-paper';
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
-
-const Tab = createBottomTabNavigator();
-
 
 export default function busca(){
-<<<<<<< HEAD
+  console.disableYellowBox = true;
+
   const [produtos, setProdutos] = useState('');
   const [historico, setHistorico] = useState([]);
-
-  /*
-  useEffect(()=>{
-    
-    async function loadList(){
-      await firebase.database().ref('produtos')
-      .orderByChild('nome')
-      .equalTo(produtos)
-      .on('value', (snapshot)=>{
-        setHistorico([]);
-
-        snapshot.forEach((childItem) => {
-          let list = {
-            key: childItem.key,
-            nome: childItem.val().nome,
-            preco: childItem.val().preco,
-          //  uid: uid
-          };
-       
-          setHistorico(oldArray => [...oldArray, list]);
-          console.log(historico);
-
-        })
-
-      })
-
-    }
-
-    loadList();
-  }, []);
-
-*/
-
+  const [imageName, setImageName] = useState('');
  
-
   async function buscar(){
+    
     await firebase.database().ref('produtos')
     .orderByChild('nome')
     .startAt(produtos)
@@ -74,6 +22,7 @@ export default function busca(){
       setHistorico([]);
 
       snapshot.forEach((childItem) => {
+ 
         let list = {
           key: childItem.key,
           nome: childItem.val().nome,
@@ -83,7 +32,7 @@ export default function busca(){
           mercado: childItem.val().mercado,
           preco: childItem.val().preco,
           foto: childItem.val().foto,
-        //  uid: uid
+          dataDePublicacao: childItem.val().dataDePublicacao
         };
      
         setHistorico(oldArray => [...oldArray, list]);
@@ -92,24 +41,12 @@ export default function busca(){
 
     })
 
+    
+
   };
-=======
-  const [prod, setProd] = useState('');
 
-  const { user, signOut } = useContext(AuthContext);
-  const navigation = useNavigation();
-  //barra de pesquisa
-  const [searchQuery, setSearchQuery] = useState('');
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
-
-  async function buscar(){
-    var ref = firebase.database().ref("usuarios");
-    ref.orderByChild("cargo").equalTo(prod).on("child_added", function(snapshot) {
-      console.log(snapshot.key);
-    });
-};
     return(
-      <View>      
+      <ScrollView>      
 
           <Searchbar
             placeholder="Busque por um produto"
@@ -120,7 +57,6 @@ export default function busca(){
               marginTop:10,
               alignContent: "center",
               }}
-<<<<<<< HEAD
               onChangeText={(texto) => setProdutos(texto) }
 
             value={produtos}
@@ -132,32 +68,13 @@ export default function busca(){
          
           <FlatList
           keyExtractor={item => item.key}
-          data={historico.sort((a, b) => b.preco - a.preco)}
+          data={historico}
           renderItem={ ({item}) => ( <Listagem data={item} /> )  }
           />
    
   
   
-=======
-              onChangeText={(texto) => setProd(texto) }
-
-            value={prod}
-          />
-          <Text>
-            {user.name}
-          </Text>
-          <Button mode="contained"
-            title="buscar"
-            onPress={buscar}
-          />
-          <Button mode="contained"
-            title="Sair da conta"
-            onPress={() => signOut()} 
-          />
-        
-
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
-      </View>
+      </ScrollView>
     );
 }
 

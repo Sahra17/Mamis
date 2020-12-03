@@ -40,21 +40,14 @@ export default function SignIn() {
         autoCorrect={false} //impede a autocorreção do teclado
         autoCapitalize="none"
         value={password}
-<<<<<<< HEAD
         secureTextEntry={true}
-=======
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
         onChangeText={text => setPassword(text)}
       />
       <Button style={styles.button} mode="contained" onPress={handleLogin}>
         Entrar
       </Button>
 
-<<<<<<< HEAD
       <Text style={styles.criarConta} onPress={ () => navigation.navigate('SignUp')}>
-=======
-      <Text onPress={ () => navigation.navigate('SignUp')}>
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
         Criar uma conta!
       </Text>
     </View>
@@ -63,20 +56,6 @@ export default function SignIn() {
 
 
 const Stack = createStackNavigator();  
-<<<<<<< HEAD
-
-=======
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#f16a77',
-    accent: 'yellow',
-    background: '#f16a77',
-  },
-};
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
-
 const styles = StyleSheet.create({
 	view: {
     backgroundColor: '#f16a77',
@@ -90,14 +69,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 10,
     marginRight: 10,
-<<<<<<< HEAD
   },
   criarConta:{
     alignSelf: "center",
     marginTop: 10,
     color:'white'
-=======
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
   },
 	text: {
     marginTop: 10, 
@@ -105,11 +81,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     backgroundColor:"white",
-<<<<<<< HEAD
-    color:'red'
-
-=======
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
+    
   },
   title:{
       alignSelf: "center",

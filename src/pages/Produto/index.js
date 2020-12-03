@@ -1,70 +1,51 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, Component } from 'react';
-import { View, Text, StyleSheet, Platform, Image, TouchableOpacity, ScrollView, Picker} from 'react-native';
+import { View, Text, StyleSheet, Platform, TouchableOpacity, TouchableHighlight, ScrollView, Modal, Picker} from 'react-native';
 import firebase from '../../services/firebaseConnection';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import moment from "moment";
 
 import { Button, TextInput, Title, Subheading } from 'react-native-paper';
-import { pickImageFromCamera, pickImageFromLibrary } from '../../Camera.js';
-=======
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button} from 'react-native';
-import firebase from '../../services/firebaseConnection';
-import { createStackNavigator } from '@react-navigation/stack';
-
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
+import { pickImageFromCamera, pickImageFromLibrary, sendImageToStorage } from '../../Camera.js';
 
 
 export default function Produto(){
   const [nome, setNome] = useState('');
-<<<<<<< HEAD
+  const [marca, setMarca] = useState('');
+  const [data, setData] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [categoriaSel, setCategoriaSel] = useState(''); //select
-  const [supermercadoSel, setSupermercadoSel] = useState(''); //select
-
-  const [categoria, setCategoria] = useState([]); //select verificar não
-  const [supermercado, setSupermercado] = useState([]); //select
-  const [selectedValue, setSelectedValue] = useState("Fruta");
-  const [selectSupermercado, setSelectSupermercado] = useState("Rancho Bom");
+  const [categoriaSel, setCategoriaSel] = useState(''); 
+  const [supermercadoSel, setSupermercadoSel] = useState(''); 
+  const [categoria, setCategoria] = useState([]);
+  const [supermercado, setSupermercado] = useState([]); 
   const [imagePickerStatus, setImagePickerStatus] = useState(false);
   const [foto, setFoto] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
-  
+  console.disableYellowBox = true;
   useEffect(()=>{
    
 
     async function loadList(){
       await firebase.database().ref('categoria')
       .on('child_added', (snapshot)=>{
-        console.log(snapshot);
 
         snapshot.forEach((childItem) => {
          
           let list = childItem.val();
-          console.log(list);
 
           setCategoria(oldArray => [...oldArray, list]);
-          console.log(categoria);
   
         })
       })
 
-      await firebase.database().ref('supermercado')
+      await firebase.database().ref('supermercado')	
       .on('child_added', (snapshot)=>{
-        console.log(snapshot);
 
-        snapshot.forEach((childItem) => {
-         
-          let list = childItem.val();
-          console.log(list);
+          let list = snapshot.val().nome;
 
-          setSupermercado(oldArray => [...oldArray, list]);
-          console.log(supermercado);
-  
-        })
+          setSupermercado(oldArray => [...oldArray, list]);        
       })
-
 
     }
 
@@ -76,28 +57,52 @@ export default function Produto(){
   //criado por
   const [preco, setPreco] = useState('');
   async function cadastrar(){
-    if(nome !== '' & descricao !== ''){
+
+    const nomeFoto = await buscaImage(foto);
+
+      console.log(nome);
+      alert('sim');
+
+    var dataPub = moment().format('DD/MM/YYYY');
+
+ 
+   
+    if(nome && descricao && preco  && nomeFoto && supermercadoSel && categoriaSel && marca){
       let produtos = await firebase.database().ref('produtos');
       let chave = produtos.push().key;
 
-      produtos.child(chave).set({
+      await produtos.child(chave).set({
         nome: nome,
         descricao: descricao,
         preco: preco,
-        foto: foto,
+        foto: nomeFoto,
+        mercado: supermercadoSel,
+        categoria: categoriaSel,
+        marca: marca,
+        dataDePublicacao: dataPub
       });
 
       alert('Cadastrado com sucesso!');
-      setDescricao('');
       setNome('');
+      setDescricao('');
+      setPreco('');
+      setFoto('');
+      setMarca('');
+      setData('');
+
+    }else{
+      alert('Por favor preencha todos os campos!');
+      console.log('Cadastro vazio, não cadastrou');
     }
+  
   }
 
   async function getImage(type) {
     if (type === 'camera') {
       const response = await pickImageFromCamera();
       setImagePickerStatus(false);
-      if (!response.cancelled) setFoto(response.uri);
+    
+      if (!response.cancelled) setFoto(response);
     }
     
     else if (type === 'library') {
@@ -108,7 +113,45 @@ export default function Produto(){
     }
   }
 
+  async function buscaImage(imagem) {
+    const response = await sendImageToStorage(imagem);
+    console.log("busca foto");
+    console.log(response);
+    return response;
 
+  }
+
+  function validaTexto(){
+    if(nome !== ''){
+      if(nome.length < 2){
+        alert("Utilize mais de 1 digito no campo nome");
+        setNome('');
+      }
+    }
+    if(descricao !== ''){
+      if(descricao.length < 2){
+        alert("Utilize mais de 1 digito no campo descrição");
+        setDescricao('');
+      }
+    }
+    if(marca !== ''){
+      if(marca.length < 2){
+        alert("Utilize mais de 1 digito no campo marca");
+        setMarca('');
+      }
+    }
+  }
+
+  const currency = "R$ ";
+/*
+  function currencyFormat (value) {
+    return currency + (((typeof(value) === 'number' ? value.toFixed(2).toString() : value)
+      .replace(/\D/g,'') /100).toFixed(2) + '')
+      .replace(".", ",")
+      .replace(/(\d)(\d{3})(\d{3}),/g, "$1.$2.$3,")
+      .replace(/(\d)(\d{3}),/g, "$1.$2,");
+  }
+*/
   return(
     <ScrollView 
     behavior={Platform.OS === 'ios' ? 'padding' : ''}
@@ -116,13 +159,11 @@ export default function Produto(){
     style={styles.inputs} >
       <Title style={styles.title}>Cadastro de produto</Title>
 
-      <Button style={styles.button} labelStyle={{color: "white"}} mode="contained" onPress={() => getImage('camera')}>Tirar uma foto</Button>
-      <Button style={styles.button} labelStyle={{color: "white"}} mode="contained" onPress={() => getImage('library')}>Importar da biblioteca</Button>
-
-
+      <Button icon="camera" style={styles.button} labelStyle={{color: "white"}} mode="contained" onPress={() => getImage('camera')}>Tirar uma foto</Button>
 
       <TextInput style={styles.text}
         label="Nome"
+        onBlur={() => validaTexto() }
         onChangeText={(texto) => setNome(texto) }
         value={nome}
       />
@@ -130,8 +171,16 @@ export default function Produto(){
 
       <TextInput style={styles.text}
         label="Descrição"
+        onBlur={() => validaTexto() }
         onChangeText={(texto) => setDescricao(texto) }
         value={descricao}
+      />
+
+      <TextInput style={styles.text}
+        label="Marca"
+        onBlur={() => validaTexto() }
+        onChangeText={(texto) => setMarca(texto) }
+        value={marca}
       />
       
       <Subheading style={{padding:10}}>Categoria</Subheading>
@@ -174,6 +223,7 @@ export default function Produto(){
 
       <TextInput style={styles.text}
         label="Preço"
+        /*onBlur={(texto) => currencyFormat(texto) }*/
         onChangeText={(texto) => setPreco(texto) }
         value={preco}
       />
@@ -182,90 +232,33 @@ export default function Produto(){
         Cadastrar
       </Button>
     </ScrollView>
-=======
-  const [cargo, setCargo] = useState('');
-
-  useEffect(()=> {
-
-    async function dados(){
-
-      //Criar um (nó)
-      //await firebase.database().ref('tipo').set('Vendedor');
-
-      //Remove um nó
-      //await firebase.database().ref('tipo').remove();
-
-      // await firebase.database().ref('usuarios').child(3).set({
-      //   nome: 'Jose',
-      //   cargo: 'Programador Junior'
-      // });
-
-      // await firebase.database().ref('usuarios').child(3)
-      // .update({
-      //   nome: 'Jose augusto'
-      // })
-
-    }
-
-    dados();
-
-
-  }, []);
-
-
-
-  async function cadastrar(){
-    if(nome !== '' & cargo !== ''){
-      let usuarios = await firebase.database().ref('usuarios');
-      let chave = usuarios.push().key;
-
-      usuarios.child(chave).set({
-        nome: nome,
-        cargo: cargo
-      });
-
-      alert('Cadastrado com sucesso!');
-      setCargo('');
-      setNome('');
-    }
-  }
-  const Stack = createStackNavigator();
-
-
-  return(
-    
-    <View style={styles.container}>
-       < Formik
-     initialValues = { { nome : '' } }  
-     onSubmit = { valores => console . log ( valores ) } 
-   ></Formik>
-      <Text style={styles.texto}>Nome</Text>
-      <TextInput
-      style={styles.input}
-      underlineColorAndroid="transparent"
-      onChangeText={(texto) => setNome(texto) }
-      value={nome}
-      />
-
-      <Text style={styles.texto}>Cargo</Text>
-      <TextInput
-      style={styles.input}
-      underlineColorAndroid="transparent"
-      onChangeText={(texto) => setCargo(texto) }
-      value={cargo}
-      />
-
-      <Button
-      title="Novo funcionario"
-      onPress={cadastrar}
-      />
-    </View>
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
   );
 }
 
+
+
+
 const styles = StyleSheet.create({
-<<<<<<< HEAD
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
 	view: {
     backgroundColor: 'white',
     width:'100%',
@@ -309,27 +302,5 @@ const styles = StyleSheet.create({
   },
 })
 
-/*
-      < Formik
-     initialValues = { { nome : '' } }  
-     onSubmit = { valores => console . log ( valores ) } 
-   ></Formik>
-   */
-=======
-  container:{
-    flex:1,
-    margin: 10,
-  },
-  texto: {
-    fontSize: 20,
-  },
-  input:{
-    marginBottom: 10,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#121212',
-    height: 45,
-    fontSize: 17
-  }
-});
->>>>>>> 261a59cc3704433c6500f51c1edc6665dfc65047
+
+  

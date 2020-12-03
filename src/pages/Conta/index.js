@@ -4,8 +4,6 @@ import { TextInput, Title, Button } from 'react-native-paper';
 import firebase from '../../services/firebaseConnection';
 import { AuthContext } from '../../contexts/auth';
 
-//        {id:'1', nome: 'Sahra', telefone: '0000-0000', endereco: 'limoeiro', email: 'sahra@gmail.com', senha: 'senha'}
-
 export default function Conta(){
     const [name, setName] = useState('');
     const [telefone, setTelefone] = useState('');
@@ -14,33 +12,80 @@ export default function Conta(){
     const [password, setPassword] = useState('');
 
     const { update } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
 
     function handleSignUp(){
         update(email, password, name, telefone, endereco);
     }
 
+    function validaTexto(){
+      if(name !== ''){
+        if(name.length < 2){
+          alert("Utilize mais de 1 digito no campo nome");
+          setName('');
+        }
+      }
+      if(endereco !== ''){
+        if(endereco.length < 2){
+          alert("Utilize mais de 1 digito no campo endereço");
+          setEndereco('');
+        }
+      }
+      if(email !== ''){
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if(reg.test(email) === false) {
+          console.log("Email is Not Correct");
+          alert("Campo de email é inválido");
+          setEmail('');
+        }
+        else {
+          setEmail(email);
+          console.log("Email is Correct");
+        }
+      }
+      if(password !== ''){
+        if(password.length < 5){
+          alert("Utilize mais de 5 digitos no campo senha");
+          setPassword('');
+        }
+      }
+    }
 
-/*
+
   useEffect(()=>{
     async function loadList(){
-      await firebase.database().ref('users')
-      .equalTo(userId)
-      .set({
-        nome: nome
+      console.log(user.uid);
+      
+
+    await firebase.database().ref('users/' + user.uid)
+    .on('value', (snapshot)=>{
+
+      snapshot.forEach((childItem) => {
+ //Object.values(objeto)
+        
+          setName(childItem.val().name);
+      
+          console.log(childItem.val().name);
+
+          console.log(name);
+
+
       })
+
+    })
 
     }
 
     loadList();
   }, []);
 
-*/
+
   return(
     <ScrollView 
     behavior={Platform.OS === 'ios' ? 'padding' : ''}
     enabled
     style={styles.inputs} >
-        <Title style={styles.title}>Criar conta</Title>
+        <Title style={styles.title}>Minha conta</Title>
 
         <TextInput style={styles.text}
           label="name"
@@ -60,6 +105,7 @@ export default function Conta(){
         <TextInput style={styles.text}
           label="email"
           value={email}
+          onBlur={() => validaTexto() }
           onChangeText={ (text) => setEmail(text)}
         />
         <TextInput style={styles.text}
